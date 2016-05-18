@@ -1,0 +1,52 @@
+select distinct roadtype from RoadMapHSC
+
+
+select * from RoadMapHSC
+select top 100 roadtype ,roadname,rdname,geom from RoadMapHSC
+
+--把 rdname 取出來
+
+select  roadtype ,roadname,rdname,geom from RoadMapHSC where roadname='台61' and rdname !=''
+
+--區分rdname
+
+select distinct  roadtype ,rdname from RoadMapHSC where  rdname !=''
+--rdname 總數
+select   roadtype ,rdname from RoadMapHSC where  rdname !=''
+
+--觀察是否都為雙向道
+select  roadtype ,roadname,rdname,geom from RoadMapHSC where rdname ='竹林路'
+--看起來還要區分roadtype
+--roadtype=RD 單線
+select  roadtype ,roadname,rdname,geom from RoadMapHSC where roadtype='RD' and rdname ='竹林路'
+--roadtype=2U 單線
+select  roadtype ,roadname,rdname,geom from RoadMapHSC where roadtype='2U' and rdname ='竹林路'
+--roadtype=1E 雙線
+select  roadtype ,roadname,rdname,geom from RoadMapHSC where   rdname ='西濱路四段'
+--roadtype=3U 單線
+select  roadtype ,roadname,rdname,geom from RoadMapHSC where  roadtype='3U' and  rdname ='福昌街'
+--roadtype=AL 單線
+select  roadtype ,roadname,rdname,geom from RoadMapHSC where  roadtype='AL' and  rdname ='福昌街'
+--roadtype=1U 單線
+select  roadtype ,roadname,rdname,geom from RoadMapHSC where  roadtype='1U' 
+--區分roadtype 看看
+
+select  distinct roadtype  from RoadMapHSC 
+--1W 1E  HW HU(國到附屬與服務區道路)為雙線
+select  roadtype ,roadname,rdname,geom from RoadMapHSC where  roadtype='1U' and rdname ='西濱路三段'
+
+
+select  roadtype ,roadname,rdname,Fnode,Tnode,geom from RoadMapHSC where  rdname ='西濱路三段'
+
+
+select * from RoadMapHSC where Fnode='S7GH2NPXV' or Tnode='S7GH2NPXV'
+select * from RoadMapHSC where Tnode='S7GH2NPXV'
+select * from RoadMapHSC where roadid='1001800005271'
+
+--針測到1W 1E　即為雙向　，緩衝8公尺融合，交集所屬欄位　，抓出總長度應除以二,
+
+
+--暫時以中華五段開始做研發
+select  roadtype ,roadname,rdname,geom from RoadMapHSC where rdname ='中華路五段'
+--發展半徑8公尺
+select  roadtype ,roadname,rdname,geom from RoadMapHSC where rdname ='中華路五段'
