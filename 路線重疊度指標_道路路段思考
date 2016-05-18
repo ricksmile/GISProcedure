@@ -49,4 +49,25 @@ select * from RoadMapHSC where roadid='1001800005271'
 --暫時以中華五段開始做研發
 select  roadtype ,roadname,rdname,geom from RoadMapHSC where rdname ='中華路五段'
 --發展半徑8公尺
-select  roadtype ,roadname,rdname,geom from RoadMapHSC where rdname ='中華路五段'
+select  rdname,geography::UnionAggregate(geom.STBuffer(8)) from RoadMapHSC where rdname ='中華路五段'
+group by rdname
+
+
+
+--交集行駛路線
+
+select 
+ b.Class,
+ b.RouteID, 
+ a.geom.STIntersection(b.geom).STLength ( ) as '行駛長度', 
+ a.geom.STIntersection(b.geom).STLength ( )/length  as '重疊比例',
+length  as '總長'
+from 
+(select  rdname,sum(geom.STLength ( )) as length,geography::UnionAggregate(geom.STBuffer(8)) as geom from RoadMapHSC where rdname ='中華路五段'
+group by rdname) a,(select * from RouteLine ) b
+order by 重疊比例 desc
+
+
+
+
+
