@@ -1,6 +1,6 @@
 USE [HSCBUS]
 GO
-/****** Object:  StoredProcedure [dbo].[路線重疊指標＿道路路段]    Script Date: 2016/5/19 下午 03:58:44 ******/
+/****** Object:  StoredProcedure [dbo].[路線重疊指標＿道路路段]    Script Date: 2016/5/19 下午 05:51:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10,9 +10,11 @@ GO
 -- Create date: 2016/05/19
 -- Description:	採用　RoadMapHSC_sp1　回傳圖資實作道路路段與公車路線重疊比較
 -- 參考資料http://frankiestudy.blogspot.tw/2014/04/t-sql-stored-procedure-table.html
+--參數　@mode :0 全部　1:特定路段 @rdname :路段名稱
 -- =============================================
 ALTER PROCEDURE [dbo].[路線重疊指標＿道路路段] 
 	-- Add the parameters for the stored procedure here
+	@mode   int=0,
 	@rdname NVARCHAR(50) =null
 	
 AS
@@ -30,7 +32,7 @@ BEGIN
 	)
 	--執行　RoadMapHSC_sp1　把值塞入#RoadMapHSC_TMP　
 	INSERT INTO #RoadMapHSC_TMP
-	EXEC RoadMapHSC_sp1 @rdname
+	EXEC RoadMapHSC_sp1　@mode　, @rdname
 	--移除資料表
 	--DROP TABLE #RoadMapHSC_TMP
 
