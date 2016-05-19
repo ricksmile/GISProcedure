@@ -11,6 +11,7 @@ GO
 -- Description:	採用　RoadMapHSC_sp1　回傳圖資實作道路路段與公車路線重疊比較
 -- 參考資料http://frankiestudy.blogspot.tw/2014/04/t-sql-stored-procedure-table.html
 --參數　@mode :0 全部　1:特定路段 @rdname :路段名稱
+--範例　　exec [路線重疊指標＿道路路段] 0　　exec [路線重疊指標＿道路路段] 1,'竹光路'
 -- =============================================
 ALTER PROCEDURE [dbo].[路線重疊指標＿道路路段] 
 	-- Add the parameters for the stored procedure here
