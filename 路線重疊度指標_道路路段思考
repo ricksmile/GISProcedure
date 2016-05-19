@@ -95,11 +95,23 @@ where  a.geom.STIntersection(b.geom).STLength ( ) !=0　
 order by 重疊比例 desc
 
 
+--把其中一段拿出來做預存
+
+select 
+ rdname    as '道路路段',
+ b.Class   as '路線屬性',
+ b.RouteID as '路線編號', 
+ a.geom.STIntersection(b.geom).STLength ( ) as '行駛長度', 
+ a.geom.STIntersection(b.geom).STLength ( )/a.geom.STLength()  as '重疊比例',
+ a.geom.STLength()  as '總長'
+from 
+(--預存--RoadMapHSC_sp1) ab 
+where ab.ROADTYPE!='AL' group by rdname) a ,(select * from RouteLine ) b
+where  a.geom.STIntersection(b.geom).STLength ( ) !=0　
+order by 重疊比例 desc
 
 
-
-
-
+--把RoadMapHSC_sp1 結果存入檢視表
 
 
 
