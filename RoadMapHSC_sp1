@@ -1,6 +1,6 @@
 USE [HSCBUS]
 GO
-/****** Object:  StoredProcedure [dbo].[RoadMapHSC_sp1]    Script Date: 2016/5/19 下午 02:23:09 ******/
+/****** Object:  StoredProcedure [dbo].[路線重疊指標＿道路路段]    Script Date: 2016/5/19 下午 05:27:41 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8,12 +8,16 @@ GO
 -- =============================================
 -- Author:		鐘靈
 -- Create date: 2016/05/19
--- Description:	RoadMapHSC_sp1('路段名稱'):節取道路路段名稱與融合圖資
---              (除巷弄外)
+-- Description:	採用　RoadMapHSC_sp1　回傳圖資實作道路路段與公車路線重疊比較
+-- 參考資料http://frankiestudy.blogspot.tw/2014/04/t-sql-stored-procedure-table.html
+--參數：　@mode :0 全部　1:特定路段 @rdname :路段名稱
+--範例：　exec 路線重疊指標＿道路路段 0　　exec 路線重疊指標＿道路路段 1,'竹光路'
 -- =============================================
-ALTER PROCEDURE [dbo].[RoadMapHSC_sp1] 
+ALTER PROCEDURE [dbo].[路線重疊指標＿道路路段] 
 	-- Add the parameters for the stored procedure here
-	@rdname nvarchar(50) = null
+	@mode   int=0,
+	@rdname NVARCHAR(50) =null
+	
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
@@ -21,13 +25,32 @@ BEGIN
 	SET NOCOUNT ON;
 
     -- Insert statements for procedure here
+	--建立資料表
+	CREATE TABLE #RoadMapHSC_TMP
+	(
+		rdname	NVARCHAR(50),
+		geom	geography
+	)
+	--執行　RoadMapHSC_sp1　把值塞入#RoadMapHSC_TMP　
+	INSERT INTO #RoadMapHSC_TMP
+	EXEC RoadMapHSC_sp1　@mode　, @rdname
+	--移除資料表
+	--DROP TABLE #RoadMapHSC_TMP
 
-	select  rdname,
-		    geography::UnionAggregate(geom) as geom 
-     from (
-	        select * from V_RoadMapHSC_sp1 where rdname  = @rdname
-			
-			) ab
-		where ab.ROADTYPE!='AL' and ab.ROADTYPE!='OR' group by rdname
-	
+	--執行道路路段與公車路網重疊計算
+		select 
+			rdname    as '道路路段',
+			b.Class   as '路線屬性',
+			b.RouteID as '路線編號', 
+			a.geom.STIntersection(b.geom).STLength ( ) as '行駛長度', 
+			a.geom.STIntersection(b.geom).STLength ( )/a.geom.STLength()  as '重疊比例',
+			a.geom.STLength()  as '總長'
+		from 
+		(select  * from #RoadMapHSC_TMP) a ,(select * from RouteLine ) b
+		where  a.geom.STIntersection(b.geom).STLength ( ) !=0　
+		order by 重疊比例 desc
+　
+　　--執行完成移除table 暫存檔
+　　　DROP TABLE #RoadMapHSC_TMP
+
 END
