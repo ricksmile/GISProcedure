@@ -119,8 +119,40 @@ CREATE TABLE #RoadMapHSC_TMP
 		rdname	NVARCHAR(50),
 		geom	geography
 	)
---發展道路路段sp1 預存程序
+--發展路線重疊指標＿道路路段 預存程序
 
+--建立資料表
+	CREATE TABLE #RoadMapHSC_TMP
+	(
+		rdname	NVARCHAR(50),
+		geom	geography
+	)
+	--執行　RoadMapHSC_sp1　把值塞入#RoadMapHSC_TMP　
+	INSERT INTO #RoadMapHSC_TMP
+	EXEC RoadMapHSC_sp1 @rdname
+	--移除資料表
+	--DROP TABLE #RoadMapHSC_TMP
+
+	--執行道路路段與公車路網重疊計算
+		select 
+			rdname    as '道路路段',
+			b.Class   as '路線屬性',
+			b.RouteID as '路線編號', 
+			a.geom.STIntersection(b.geom).STLength ( ) as '行駛長度', 
+			a.geom.STIntersection(b.geom).STLength ( )/a.geom.STLength()  as '重疊比例',
+			a.geom.STLength()  as '總長'
+		from 
+		(select  * from #RoadMapHSC_TMP) a ,(select * from RouteLine ) b
+		where  a.geom.STIntersection(b.geom).STLength ( ) !=0　
+		order by 重疊比例 desc
+　
+　　--執行完成移除table 暫存檔
+　　　DROP TABLE #RoadMapHSC_TMP
+　　　
+　　　--執行成功
+　　　exec 路線重疊指標＿道路路段 '竹光路'
+　　　
+	
 
 
 
