@@ -1,6 +1,6 @@
 USE [HSCBUS]
 GO
-/****** Object:  StoredProcedure [dbo].[RoadMapHSC_sp1]    Script Date: 2016/5/19 下午 05:50:55 ******/
+/****** Object:  StoredProcedure [dbo].[RoadMapHSC_sp1]    Script Date: 2016/5/19 下午 05:54:49 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12,6 +12,7 @@ GO
 --              (除巷弄外)
 --檢視表：V_RoadMapHSC_sp1
 --參數　mode :0 全部　1:特定路段
+--範例　exec [RoadMapHSC_sp1] 0    exec [RoadMapHSC_sp1] 1,'竹光路'
 -- =============================================
 ALTER PROCEDURE [dbo].[RoadMapHSC_sp1] 
 	-- Add the parameters for the stored procedure here
