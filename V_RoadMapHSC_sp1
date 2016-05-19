@@ -1,0 +1,3 @@
+SELECT          ROADTYPE, RDNAME, geography::UnionAggregate(geom.STBuffer(8)) AS geom
+FROM              dbo.RoadMapHSC
+GROUP BY   RDNAME, ROADTYPE
