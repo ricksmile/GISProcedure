@@ -1,0 +1,33 @@
+USE [HSCBUS]
+GO
+/****** Object:  StoredProcedure [dbo].[RoadMapHSC_sp1]    Script Date: 2016/5/19 下午 02:23:09 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		鐘靈
+-- Create date: 2016/05/19
+-- Description:	RoadMapHSC_sp1('路段名稱'):節取道路路段名稱與融合圖資
+--              (除巷弄外)
+-- =============================================
+ALTER PROCEDURE [dbo].[RoadMapHSC_sp1] 
+	-- Add the parameters for the stored procedure here
+	@rdname nvarchar(50) = null
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+
+	select  rdname,
+		    geography::UnionAggregate(geom) as geom 
+     from (
+	        select * from V_RoadMapHSC_sp1 where rdname  = @rdname
+			
+			) ab
+		where ab.ROADTYPE!='AL' and ab.ROADTYPE!='OR' group by rdname
+	
+END
