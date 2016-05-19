@@ -112,6 +112,16 @@ order by 重疊比例 desc
 
 
 --把RoadMapHSC_sp1 結果存入檢視表
+--要存入檢視表前,應該建立table 變數
+
+CREATE TABLE #RoadMapHSC_TMP
+	(
+		rdname	NVARCHAR(50),
+		geom	geography
+	)
+--發展道路路段sp1 預存程序
+
+
 
 
 
