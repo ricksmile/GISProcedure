@@ -57,15 +57,33 @@ group by rdname
 --交集行駛路線
 
 select 
- b.Class,
- b.RouteID, 
+ rdname as 道路路段,
+ b.Class as 路線屬性,
+ b.RouteID as 路線編號, 
  a.geom.STIntersection(b.geom).STLength ( ) as '行駛長度', 
  a.geom.STIntersection(b.geom).STLength ( )/length  as '重疊比例',
 length  as '總長'
 from 
-(select  rdname,sum(geom.STLength ( )) as length,geography::UnionAggregate(geom.STBuffer(8)) as geom from RoadMapHSC where rdname ='中華路五段'
+(select  rdname,sum(geom.STLength ( )) as length,geography::UnionAggregate(geom.STBuffer(8)) as geom from RoadMapHSC 
+where rdname  like '光復路二段' 
 group by rdname) a,(select * from RouteLine ) b
+where  a.geom.STIntersection(b.geom).STLength ( ) !=0
 order by 重疊比例 desc
+
+--看樣子是不行的因為實際算來其實道路路段有重疊
+--如果使用重疊面積反推回來試試?
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
