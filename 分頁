@@ -1,0 +1,7 @@
+
+SELECT NewTable.*
+   FROM (SELECT ROW_NUMBER() OVER(ORDER BY stopid) AS NewRow
+             ,stopid
+             FROM stop ) AS NewTable
+   WHERE NewRow>= 1 AND NewRow<= 40
+
