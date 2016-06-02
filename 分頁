@@ -4,4 +4,25 @@ SELECT NewTable.*
              ,stopid
              FROM stop ) AS NewTable
    WHERE NewRow>= 1 AND NewRow<= 40
+   
+   
+   
+   
+   
+select  Village.V_Name as '村里',  sum(scheduleCount) as '站位涵蓋門牌',184535  as '總門牌數'  from (
+ select  V_Village_sp1.V_Name,scheduleCount, TMP.geom.STIntersection(V_Village_sp1.geom)as geom  from 
+ ----站位時段性服務班次個數
+ (select  scheduleCount.*,geom.STBuffer(150) as geom  from (
+	select  stopid,COUNT(DISTINCT ServiceID)as scheduleCount from @TMP
+	GROUP BY   stopid) as scheduleCount left join( select   StopId,geom  from Stop)Stop on scheduleCount.StopId=Stop.StopId) 
+ ---
+ TMP , 
+ 
+ (select ROW_NUMBER() OVER(ORDER BY V_Name) AS NewRow, * from V_Village_sp1 
+ )  V_Village_sp1
+ where NewRow>= 1 AND NewRow<=1
+
+ )  Village join 門牌資料 on Village.V_Name=門牌資料.V_Name
+ where Village.geom.STIntersects (門牌資料.geom)=1 
+  group by Village.V_Name
 
