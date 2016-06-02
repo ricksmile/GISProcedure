@@ -6,9 +6,32 @@ SELECT NewTable.*
    WHERE NewRow>= 1 AND NewRow<= 40
    
    
-   
-   
-   
+--0700~0900
+
+	
+	--建立資料表
+	DECLARE  @TMP  TABLE
+	(
+	[class] [varchar](9) NULL,
+	[Provider] [nvarchar](50) NULL,
+	[TimeID] [nvarchar](50) NULL,
+	[RouteId] [nvarchar](50) NULL,
+	[StopId] [nvarchar](255) NULL,
+	[StopName] [nvarchar](255) NULL,
+	[seq] [nvarchar](50) NULL,
+	[Goback] [nvarchar](255) NULL,
+	[GobackType] [nvarchar](255) NULL,
+	[ServiceID] [nvarchar](50) NULL,
+	[Atime] [nvarchar](50) NULL,
+	[Date] [nvarchar](50) NULL,
+    geom	geography
+	)
+	--執行　RouteToStop_sp1　把值塞入@TMP　
+	INSERT INTO @TMP
+	--取所有站牌環域值
+	EXEC RouteToStop_sp1　3 ,0, 0,'0600','0700'
+
+
 select  Village.V_Name as '村里',  sum(scheduleCount) as '站位涵蓋門牌',184535  as '總門牌數'  from (
  select  V_Village_sp1.V_Name,scheduleCount, TMP.geom.STIntersection(V_Village_sp1.geom)as geom  from 
  ----站位時段性服務班次個數
@@ -20,9 +43,18 @@ select  Village.V_Name as '村里',  sum(scheduleCount) as '站位涵蓋門牌',
  
  (select ROW_NUMBER() OVER(ORDER BY V_Name) AS NewRow, * from V_Village_sp1 
  )  V_Village_sp1
- where NewRow>= 1 AND NewRow<=1
+ where NewRow>= 2 AND NewRow<=123
 
  )  Village join 門牌資料 on Village.V_Name=門牌資料.V_Name
  where Village.geom.STIntersects (門牌資料.geom)=1 
   group by Village.V_Name
+
+
+
+
+
+
+
+
+
 
